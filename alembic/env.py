@@ -3,7 +3,6 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-# 1) app modellerini içeri al: target_metadata lazım
 from app.models import Base
 from app.settings import get_settings
 
@@ -12,8 +11,6 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-
-# 2) .env/.settings üzerinden DB URL al
 
 
 def get_url():
@@ -26,7 +23,7 @@ def run_migrations_offline():
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        compare_type=True,   # enum/kolon tipi değişimlerini de yakala
+        compare_type=True,
     )
     with context.begin_transaction():
         context.run_migrations()

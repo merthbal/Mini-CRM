@@ -6,7 +6,6 @@ from .models import Base
 
 _settings = get_settings()
 
-# SQLite ise check_same_thread bayrağı lazım
 connect_args = {"check_same_thread": False} if _settings.DATABASE_URL.startswith(
     "sqlite") else {}
 

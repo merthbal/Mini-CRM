@@ -26,15 +26,12 @@ def _load():
     return _summarizer
 
 
-# RQ job target
-# app/ai/summarizer.py
 def summarize_text(text: str, max_tokens: int | None = None) -> str:
     sm = _load()
     text = text.strip()
     if not text:
         return ""
     max_len = max_tokens or _settings.SUMMARY_MAX_TOKENS
-    # çok kısa inputlarda makul bir üst sınır:
     max_len = max(24, min(max_len, int(len(text.split()) * 0.8)))
     result = sm(text, max_length=max_len, min_length=min(
         16, max_len // 2), do_sample=False)

@@ -76,7 +76,6 @@ class Node(Base):
 
     owner: Mapped[User] = relationship("User", back_populates="nodes")
 
-    # Faydalı birleşik indeks örneği (sorguları hızlandırır)
     __table_args__ = (
         Index("ix_nodes_owner_status", "owner_id", "status"),
     )

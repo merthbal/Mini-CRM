@@ -14,8 +14,6 @@ from .settings import get_settings
 app = FastAPI(title="Mini CRM AI")
 app.include_router(auth_router)
 
-# ---- Meta / Health ----
-
 
 @app.get("/", tags=["meta"])
 def root():
@@ -24,7 +22,7 @@ def root():
 
 @app.get("/healthz", tags=["meta"])
 def healthz():
-    # Koyeb health check için hafif yanıt
+    # Koyeb health check lightweight
     return {"ok": True}
 
 
@@ -32,7 +30,7 @@ def _ensure_admin():
     """ENV'deki ADMIN_EMAIL'e göre admini garanti eder."""
     s = get_settings()
     if not s.ADMIN_EMAIL:
-        return  # opsiyonel – tanımlı değilse geç
+        return  # optional
     db = SessionLocal()
     try:
         u = db.query(User).filter_by(email=s.ADMIN_EMAIL).first()
@@ -46,7 +44,7 @@ def _ensure_admin():
             db.add(u)
             db.commit()
         else:
-            # varsa da rolünü ADMIN yap (idempotent)
+            # (idempotency)
             if u.role != Role.ADMIN:
                 u.role = Role.ADMIN
                 db.commit()
@@ -60,7 +58,6 @@ def on_startup():
     _ensure_admin()
 
 
-# ---------- Helpers ----------
 def _is_admin(user: User) -> bool:
     try:
         return user.role == Role.ADMIN
@@ -151,11 +148,9 @@ def summarize_node(
     if n.status in (NoteStatus.QUEUED, NoteStatus.PROCESSING):
         raise HTTPException(409, detail="Summarization already in progress")
 
-    # QUEUED
     n.status = NoteStatus.QUEUED
     db.commit()
 
-    # Callable ile enqueue
     job = enqueue(
         run_summarize,
         n.notes,

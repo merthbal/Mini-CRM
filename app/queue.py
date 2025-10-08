@@ -12,11 +12,6 @@ q = Queue(QUEUE_NAME, connection=redis_conn)
 
 
 def enqueue(func_path: str, *args, **kwargs) -> Job:
-    """
-    func_path: 'package.module:function' veya import yolu (örn. 'app.workers.tasks.run_summarize')
-    *args/**kwargs: hedef fonksiyona geçilecek parametreler (meta gibi özel alanları Job.set_meta ile set etmek isterseniz,
-                    çağıran tarafta job = enqueue(...); job.meta['x']=...; job.save() da yapabilirsiniz.)
-    """
     return q.enqueue(func_path, *args, **kwargs)
 
 

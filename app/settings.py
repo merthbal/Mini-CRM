@@ -14,10 +14,9 @@ class Settings(BaseSettings):
     MODEL_NAME: str = "t5-small"
     SUMMARY_MAX_TOKENS: int = 128
 
-    # --- Admin bootstrap (opsiyonel) ---
+    # --- Admin bootstrap (optional) ---
     ADMIN_EMAIL: EmailStr | None = None
-    ADMIN_PASSWORD: str | None = None  # boşsa "change-me-now" ile oluşturur
-
+    ADMIN_PASSWORD: str | None = None
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
