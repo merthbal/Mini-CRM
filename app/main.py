@@ -14,6 +14,19 @@ from .settings import get_settings
 app = FastAPI(title="Mini CRM AI")
 app.include_router(auth_router)
 
+# ---- Meta / Health ----
+
+
+@app.get("/", tags=["meta"])
+def root():
+    return {"service": "mini-crm-ai", "status": "up"}
+
+
+@app.get("/healthz", tags=["meta"])
+def healthz():
+    # Koyeb health check için hafif yanıt
+    return {"ok": True}
+
 
 def _ensure_admin():
     """ENV'deki ADMIN_EMAIL'e göre admini garanti eder."""
